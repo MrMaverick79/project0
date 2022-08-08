@@ -43,9 +43,12 @@ const game = {
          //condition 1: if an entire row is the same
         for (keys in this.gameBoard){
             console.log(keys);
+            s.clear()
             for (let i = 0; i< Object.keys(this.gameBoard).length; i++) { //this iterates over a row
-                const element = this.gameBoard[keys][i]; //each element is an entry in one of the rows
+                const element = this.gameBoard[i][keys]; 
+                console.log('element:', element);
                 
+                //each element is an entry in one of the rows
                 if (element === null) {//to avoid null being determined as a win
                     s.add(nullCount);
                     nullCount++;
@@ -53,38 +56,53 @@ const game = {
                 else {
                     s.add(element);
                 }
-            } //end for
-            if(s.size === 1){ //determine whether there is  row victory
-                console.log(s);
                 
+            } //end for
+             if(s.size === 1){ //determine whether there is  row victory
+                console.log(s);
                 console.log('Row Win!');
                 return true
-            }//end if
-            s.clear()
+            }
+            
+    
         }// end for keys 
 
         //condition 2: if an entire column is the same
         s.clear();
-        for (let i = 0; i < Object.keys(this.gameBoard).length; i++) { 
-            for (key in this.gameBoard){
-                if (this.gameBoard[key][i] === null) {//to avoid null being determined as a win
+        
+           
+        for (key in this.gameBoard){
+            s.clear();
+            for (let i = 0; i < Object.keys(this.gameBoard).length; i++) {
+                    if (this.gameBoard[key][i] === null) {//to avoid null being determined as a win
                     s.add(nullCount);
                     nullCount++;
                 }
-                    else{
-               s.add(this.gameBoard[key][i]);
+                else{
+                    s.add(this.gameBoard[key][i]);
                 }
-            } 
+                
+                
+            }
+            console.log('s before check is', s);
+             
             if (s.size===1) {
                 console.log('Column Win!');
                 return true;
             }
+            
         }// end for
 
         //condition 3: diagonals right to left
         s.clear();
         for (let i = 0; i < Object.keys(this.gameBoard).length; i++) { 
-            s.add(this.gameBoard[i.toString()][i])
+            if(this.gameBoard[i.toString()][i]===null){
+                s.add(nullCount);
+                nullCount++
+            }
+            else{
+                s.add(this.gameBoard[i.toString()][i])
+            }
         } 
         if (s.size ===1) {
             console.log('Diagonal Win!');
@@ -93,15 +111,27 @@ const game = {
 
         //condition 4: diagonals left to right
         s.clear();
+        let j = 0;
         for (let i = Object.keys(this.gameBoard).length -1; i > -1; i--) { 
-            s.add(this.gameBoard[i.toString()][i])
-            console.log('s is', s);
-        } 
-        if (s.size ===1) {
-            console.log('Win!');
-            return true
-        }      
-         
+                
+                if(this.gameBoard[i][j]===null){
+                    s.add(nullCount);
+                    nullCount++;
+                    j++;
+                }
+                else{
+                    s.add(this.gameBoard[i][j])
+                    j++;
+                }
+                
+            } //inner for end
+        
+            if (s.size ===1) {
+                console.log('diagonal Win!');
+                return true
+        
+            }      
+        
 
     }, //end checkVictory
 
@@ -131,7 +161,7 @@ const game = {
 
 const playGame = () => { //plays the game
     game.gameActive = true;
-    
+   
     $('.gridItem').on('click', function(e){
         let coords  = getCoords(e);
 
@@ -152,8 +182,13 @@ const playGame = () => { //plays the game
             game.togglePlayerTurn();
         }
 
-        game.checkVictory()
-        game.checkDraw()
+        if(game.checkVictory()){
+            $('#status').html("Wins!")
+        }
+        showTurn()
+        if(game.checkDraw()){
+            $('#status').html("Draw.")
+        }
     })
 }; //end playGame
 
@@ -168,5 +203,18 @@ const renderBoard = () => {
 const getCoords = (e) => { //gets the x y from the clicked option
    const coordArray= (e.target.className.split(" "));
    return [coordArray[1], coordArray[2]];
-}
+}; //end getCoords
+
+const showTurn = () => {
+    const $turnIndicator = $('#turn')
+    if(game.isPlayerXTurn) {
+        $turnIndicator.html('X');
+    } else {
+        $turnIndicator.html("O");
+    }
+}//end showTurn
+
+showTurn();
+
+
 
