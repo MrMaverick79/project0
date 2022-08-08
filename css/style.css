@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+
 html {
     font-size: 28px;
-
+    font-family: 'Montserrat', sans-serif;
+    background-color: salmon;
 }
 
 h1{
-    color: green;
+    color: rgba(255, 255, 255, 06);
 }
 
 .mainContainer{
@@ -21,13 +24,14 @@ h1{
     background-color: aqua;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    gap: 15px;
+    gap: 5px;
     animation-duration: 1s;
-    animation-name: arrive;
+    animation-name: arrivein, arriveout;
+    animation-delay: 0ms, 1s;
 
 }
 
-@keyframes arrive{
+@keyframes arrivein{
     from {
         gap: 0px;
     }
@@ -35,9 +39,28 @@ h1{
         gap: 15px
     }
 }
+    
+@keyframes arriveout {
+
+    from {
+        gap: 15px;
+    }
+    to{
+        gap:5px;
+    }
+}
 
 .gridItem{
     background-color: salmon;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+    
+    
+   
 }
 
 .gridItem:hover {
