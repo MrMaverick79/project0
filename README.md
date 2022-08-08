@@ -9,7 +9,7 @@ Link:
 
 Background / Spec: This is the first project as part of General Assembly's Software Engineering Intensive. 
 
-###Technical Requirements
+### Technical Requirements
 Your app must:
 
 - Render a game board in the browser
@@ -20,3 +20,8 @@ Your app must:
 - Use Javascript with jQuery (or vanilla DOM methods if you really prefer) for DOM manipulation
 - Deploy your game online, where the rest of the world can access it
 - Use semantic markup for HTML and CSS (adhere to best practices)
+
+### TODO
+
+ - AI
+ 

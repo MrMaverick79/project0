@@ -1,0 +1,52 @@
+html {
+    font-size: 28px;
+
+}
+
+h1{
+    color: green;
+}
+
+.mainContainer{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+}
+
+.gameContainer {
+    display: grid;
+    width:60vw;
+    height: 60vh;
+    background-color: aqua;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 15px;
+    animation-duration: 1s;
+    animation-name: arrive;
+
+}
+
+@keyframes arrive{
+    from {
+        gap: 0px;
+    }
+    to {
+        gap: 15px
+    }
+}
+
+.gridItem{
+    background-color: salmon;
+}
+
+.gridItem:hover {
+    background-color: beige;
+    cursor: pointer;
+}
+
+.sidePanel{
+    position: absolute;
+    right: 0;
+    top: 25%;   
+}
