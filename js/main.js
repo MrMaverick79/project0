@@ -16,7 +16,7 @@ const game = {
         // row3: [null, null, null],
         '0': [null, null, null],
         '1': [null, null, null],
-        '2': [null, null , null],
+        '2': [null, null ,null],
     },
 
     displayBoard : function() { //for testing
@@ -27,9 +27,9 @@ const game = {
         return this.gameBoard[row][index];
     },
    
-    placeMove : function(player, row, position) { //returns true or false if move was successful
-        if(!game.gameBoard[row][position]){ //should check if there is something in the position
-            this.gameBoard[row][position] = player; //places move
+    placeMove : function(board, player, row, position) { //returns true or false if move was successful
+        if(!board[row][position]){ //should check if there is something in the position
+            board[row][position] = player; //places move
             return true; //lets us know whether we can go ahead and make the move
         }
         else {
@@ -38,14 +38,14 @@ const game = {
         //check victory conditions
     }, //end placeMove
 
-    checkVictory: function() { //checks all possible victory conditions 
+    checkVictory: function(board) { //checks all possible victory conditions 
         let nullCount= 0;
         let s = new Set() //This set is reused to see if the contents of the different interations are the same. A set with a length === 1 means the palyer has won.
          //condition 1: if an entire row is the same
-        for (keys in this.gameBoard){
+        for (keys in board){
             s.clear()
-            for (let i = 0; i< Object.keys(this.gameBoard).length; i++) { //this iterates over a row
-                const element = this.gameBoard[i][keys]; 
+            for (let i = 0; i< Object.keys(board).length; i++) { //this iterates over a row
+                const element = board[i][keys]; 
                 
                 //each element is an entry in one of the rows
                 if (element === null) {//to avoid null being determined as a win
@@ -68,15 +68,15 @@ const game = {
         s.clear();
         
            
-        for (key in this.gameBoard){
+        for (key in board){
             s.clear();
-            for (let i = 0; i < Object.keys(this.gameBoard).length; i++) {
-                    if (this.gameBoard[key][i] === null) {//to avoid null being determined as a win
+            for (let i = 0; i < Object.keys(board).length; i++) {
+                    if (board[key][i] === null) {//to avoid null being determined as a win
                     s.add(nullCount);
                     nullCount++;
                 }
                 else{
-                    s.add(this.gameBoard[key][i]);
+                    s.add(board[key][i]);
                 }
                 
                 
@@ -91,13 +91,13 @@ const game = {
 
         //condition 3: diagonals right to left
         s.clear();
-        for (let i = 0; i < Object.keys(this.gameBoard).length; i++) { 
-            if(this.gameBoard[i.toString()][i]===null){
+        for (let i = 0; i < Object.keys(board).length; i++) { 
+            if(board[i.toString()][i]===null){
                 s.add(nullCount);
                 nullCount++
             }
             else{
-                s.add(this.gameBoard[i.toString()][i])
+                s.add(board[i.toString()][i])
             }
         } 
         if (s.size ===1) {
@@ -107,15 +107,15 @@ const game = {
         //condition 4: diagonals left to right
         s.clear();
         let j = 0;
-        for (let i = Object.keys(this.gameBoard).length -1; i > -1; i--) { 
+        for (let i = Object.keys(board).length -1; i > -1; i--) { 
                 
-                if(this.gameBoard[i][j]===null){
+                if(board[i][j]===null){
                     s.add(nullCount);
                     nullCount++;
                     j++;
                 }
                 else{
-                    s.add(this.gameBoard[i][j])
+                    s.add(board[i][j])
                     j++;
                 }
                 
@@ -129,10 +129,10 @@ const game = {
 
     }, //end checkVictory
 
-    checkDraw : function() { //returns True or False after checking whether all board tiles have been used.
-        for (keys in this.gameBoard){
-            for (let i = 0; i< this.gameBoard[keys].length; i++) { //this iterates over a row
-                const element = this.gameBoard[keys][i]; //each element is an entry in one of the rows
+    checkDraw : function(board) { //returns True or False after checking whether all board tiles have been used.
+        for (keys in board){
+            for (let i = 0; i< board[keys].length; i++) { //this iterates over a row
+                const element = board[keys][i]; //each element is an entry in one of the rows
                 
                 if (element === null) {//to avoid null being determined as a win
                     return false;
@@ -162,7 +162,7 @@ const chooseRandomPosition = () => {
 const basicAI = () =>{
     //this should look over the available squares and choose one at random
     let selection = chooseRandomPosition();
-        if (game.placeMove('X', selection[0].toString(), selection[1])){
+        if (game.placeMove(game.gameBoard, 'X', selection[0].toString(), selection[1])){
             //place o on UI <=--this is the only place where this can gor weon
             $(`.gridItem.c${selection[0]}.r${selection[1]}`).html('X').delay(500).animate({
                 'fontSize': '4em'
@@ -172,31 +172,36 @@ const basicAI = () =>{
         else{
             basicAI();
         }
-}//end basic AI;
-
-//psuedoCode for minmax:
-
-// return a value if a terminal state is found (+10, 0, -10)
-const impossibleAi =  () => {
+}//end basic AI;;
 
 
-    function findVictory () { //scores an ai victory as 10 and player victory as -10
-        if(game.isPlayerXTurn && game.checkVictory){
+//============impossible AI==================================//
+
+
+
+let boardClone = JSON.parse(JSON.stringify(game.gameBoard));//this takes the originalboard and makes a deep copy (clone). Thus, you won't impact the game itself.
+let huPlayer = 'O';
+let aiPlayer ='X';
+
+
+
+
+const minmax =  (board, player) => {
+        if (player = 'X' && this.checkVictory()){
             return 10;
         }
-        else if (game.checkVictory){
+        else if(player = 'O' && this.checkVictory()){
             return -10;
         }
-        else if(game.checkDraw){
-            return 0
+        else if (game.checkDraw()){
+            return 0;
         }
-    }//end Findvictory
+};
 
-    function minimax()
-   
-}
 
-// go through available spots on the board
+
+
+
 // call the minimax function on each available spot (recursion)
 // evaluate returning values from function calls
 // and return the best value
@@ -252,7 +257,7 @@ const playGame = () => {
             let coords  = getCoords(e);
             toggleReset();
             if(!game.isPlayerXTurn){
-                if (game.placeMove('O', coords[0], parseInt(coords[1]))){
+                if (game.placeMove(game.gameBoard, 'O', coords[0], parseInt(coords[1]))){
                     $(this).html('O')
                     $(this).animate({
                         'fontSize': '4em'
@@ -268,14 +273,14 @@ const playGame = () => {
                 // }
                 }
 
-            if(game.checkVictory()){
+            if(game.checkVictory(game.gameBoard)){
                     game.gameActive = false;
                     $('#status').html(`${currentPlayer} Wins!`)
                     return;
             }
             showTurn()
 
-            if(game.checkDraw()){
+            if(game.checkDraw(game.gameBoard)){
                  $('#status').html("Draw.")
                  return;
             }
@@ -283,14 +288,14 @@ const playGame = () => {
             
             basicAI(); //computer turn?
                 
-            if(game.checkVictory()){
+            if(game.checkVictory(game.gameBoard)){
                     game.gameActive = false;
                     $('#status').html(`${currentPlayer} Wins!`)
                     return;
             }
             showTurn()
 
-            if(game.checkDraw()){
+            if(game.checkDraw(game.gameBoard)){
                     $('#status').html("Draw.");
                     return;
             }
