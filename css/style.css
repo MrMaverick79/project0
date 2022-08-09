@@ -22,7 +22,7 @@ h1{
 
 .gameContainer {
     display: grid;
-    width:60vw;
+    min-width: 35vw;
     height: 60vh;
     background-color: rgba(20, 247, 247, 0.8);
     grid-template-columns: 1fr 1fr 1fr;
@@ -33,6 +33,22 @@ h1{
     animation-delay: 0ms, 1s;
 
 }
+
+#reset {
+    opacity: 0;
+}
+
+#reset:hover {
+    cursor: pointer;
+}
+
+.shadowButtons {
+    display: flex;
+    width: 100vw;
+    justify-content: center;
+    margin: 0;
+};
+
 
 @keyframes arrivein{
     from {

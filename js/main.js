@@ -1,9 +1,10 @@
-console.log('Mic check');
+
 //create game
 const game = {
 
-    gameActive:  false, //this can be used to start / end the game
+    gameActive: true, //this can be used to start / end the game
     turnCount: 0,
+    aiLevel: 0,
     isPlayerXTurn: false,
     playerWins: 0,
     computerWins: 0,
@@ -42,11 +43,9 @@ const game = {
         let s = new Set() //This set is reused to see if the contents of the different interations are the same. A set with a length === 1 means the palyer has won.
          //condition 1: if an entire row is the same
         for (keys in this.gameBoard){
-            console.log(keys);
             s.clear()
             for (let i = 0; i< Object.keys(this.gameBoard).length; i++) { //this iterates over a row
                 const element = this.gameBoard[i][keys]; 
-                console.log('element:', element);
                 
                 //each element is an entry in one of the rows
                 if (element === null) {//to avoid null being determined as a win
@@ -59,8 +58,6 @@ const game = {
                 
             } //end for
              if(s.size === 1){ //determine whether there is  row victory
-                console.log(s);
-                console.log('Row Win!');
                 return true
             }
             
@@ -84,10 +81,9 @@ const game = {
                 
                 
             }
-            console.log('s before check is', s);
+            
              
             if (s.size===1) {
-                console.log('Column Win!');
                 return true;
             }
             
@@ -105,7 +101,6 @@ const game = {
             }
         } 
         if (s.size ===1) {
-            console.log('Diagonal Win!');
             return true
         }
 
@@ -127,7 +122,6 @@ const game = {
             } //inner for end
         
             if (s.size ===1) {
-                console.log('diagonal Win!');
                 return true
         
             }      
@@ -137,10 +131,8 @@ const game = {
 
     checkDraw : function() { //returns True or False after checking whether all board tiles have been used.
         for (keys in this.gameBoard){
-            console.log(keys);
             for (let i = 0; i< this.gameBoard[keys].length; i++) { //this iterates over a row
                 const element = this.gameBoard[keys][i]; //each element is an entry in one of the rows
-                console.log('element:', element);
                 
                 if (element === null) {//to avoid null being determined as a win
                     return false;
@@ -148,6 +140,7 @@ const game = {
               
             } 
         }//end for
+        game.gameActive = false
         return true;//this should be called after check victory and check victory should result in game 
     },// end checkDraw
 
@@ -158,54 +151,90 @@ const game = {
 
 }; //end game
 
+//==========================AI===================================//
 
-const playGame = () => { //plays the game
-    game.gameActive = true;
-   
-    $('.gridItem').on('click', function(e){
-        let coords  = getCoords(e);
+const chooseRandomPosition = () => {
+    const randomCol = Math.floor(Math.random() * 3);
+    const randomRow = Math.floor(Math.random() * 3);
+    return [randomCol, randomRow];
+}
 
-        if(game.isPlayerXTurn){
-            if (game.placeMove('X', coords[0], parseInt(coords[1]))) {
-                $(this).html('X')
-                $(this).animate({
-                    'fontSize': '4em'
-                }, 1000)
-                game.togglePlayerTurn();
-            }
-        }
-        else if(game.placeMove('O', coords[0], parseInt(coords[1]))){
-            $(this).html('O')
-            $(this).animate({
+const basicAI = () =>{
+    //this should look over the available squares and choose one at random
+    let selection = chooseRandomPosition();
+        if (game.placeMove('X', selection[0].toString(), selection[1])){
+            //place o on UI <=--this is the only place where this can gor weon
+            $(`.gridItem.c${selection[0]}.r${selection[1]}`).html('X').delay(500).animate({
                 'fontSize': '4em'
             }, 1000)
             game.togglePlayerTurn();
         }
-
-        if(game.checkVictory()){
-            $('#status').html("Wins!")
+        else{
+            basicAI();
         }
-        showTurn()
-        if(game.checkDraw()){
-            $('#status').html("Draw.")
-        }
-    })
-}; //end playGame
+}//end basic AI;
 
-playGame()
+//psuedoCode for minmax:
+
+// return a value if a terminal state is found (+10, 0, -10)
+const impossibleAi =  () => {
+
+
+    function findVictory () { //scores an ai victory as 10 and player victory as -10
+        if(game.isPlayerXTurn && game.checkVictory){
+            return 10;
+        }
+        else if (game.checkVictory){
+            return -10;
+        }
+        else if(game.checkDraw){
+            return 0
+        }
+    }//end Findvictory
+
+    function minimax()
+   
+}
+
+// go through available spots on the board
+// call the minimax function on each available spot (recursion)
+// evaluate returning values from function calls
+// and return the best value
+
 //==============UI===========//
 
 const renderBoard = () => {
     //might keeep this for larger boards.
 }
 
+const toggleReset= () => {
+    
+    
+    showTurn()
+    $('#status').html("Turn")
+    if(game.gameActive) {
+        $('#reset').animate({
+            opacity: 0.9,
+        }, 1500)
+       
+    }
+    else {
+        $('#reset').animate({
+            opacity: 0, 
+        }, 1500)
+       
+    }
+}
+   
 
 const getCoords = (e) => { //gets the x y from the clicked option
    const coordArray= (e.target.className.split(" "));
-   return [coordArray[1], coordArray[2]];
+   console.log(parseInt(coordArray[1][1]), parseInt(coordArray[2][1]));
+   
+   return [parseInt(coordArray[1][1]), parseInt(coordArray[2][1])];
 }; //end getCoords
 
-const showTurn = () => {
+const showTurn = () => { //displays whose turn it is in the right hand margin
     const $turnIndicator = $('#turn')
     if(game.isPlayerXTurn) {
         $turnIndicator.html('X');
@@ -215,6 +244,86 @@ const showTurn = () => {
 }//end showTurn
 
 showTurn();
+
+const playGame = () => {
+    $('.gridItem').on('click', function(e){
+            const currentPlayer = game.isPlayerXTurn ? 'X' : 'O';
+            game.gameActive = true;
+            let coords  = getCoords(e);
+            toggleReset();
+            if(!game.isPlayerXTurn){
+                if (game.placeMove('O', coords[0], parseInt(coords[1]))){
+                    $(this).html('O')
+                    $(this).animate({
+                        'fontSize': '4em'
+                    }, 1000)
+                    game.togglePlayerTurn();
+                    
+                // if (game.placeMove('X', coords[0], parseInt(coords[1]))) {
+                //     $(this).html('X')
+                //     $(this).animate({
+                //         'fontSize': '4em'
+                //     }, 1000)
+                //     game.togglePlayerTurn();
+                // }
+                }
+
+            if(game.checkVictory()){
+                    game.gameActive = false;
+                    $('#status').html(`${currentPlayer} Wins!`)
+                    return;
+            }
+            showTurn()
+
+            if(game.checkDraw()){
+                 $('#status').html("Draw.")
+                 return;
+            }
+         
+            
+            basicAI(); //computer turn?
+                
+            if(game.checkVictory()){
+                    game.gameActive = false;
+                    $('#status').html(`${currentPlayer} Wins!`)
+                    return;
+            }
+            showTurn()
+
+            if(game.checkDraw()){
+                    $('#status').html("Draw.");
+                    return;
+            }
+                 
+        }
+    })//end click eveents 
+    
+
+}//end playGame
+
+
+playGame();
+
+const resetGame = () => { //resets the board 
+    $('#reset').on('click', function(){
+        //replace the js game board with null
+        for (keys in game.gameBoard){
+            for (let i = 0; i < game.gameBoard[keys].length; i++) {
+                game.gameBoard[keys][i] = null;
+            } //end inner for loop
+        }//end outer for loop
+        
+    $('.gridItem').html('') //clear the UI gameboard
+    game.gameActive = false;
+    game.isPlayerXTurn = false;
+    //hide the reset button
+    toggleReset();
+    }) //end resetGame
+}
+resetGame()
+
+
+
 
 
 

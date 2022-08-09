@@ -10,6 +10,7 @@ Link:
 Background / Spec: This is the first project as part of General Assembly's Software Engineering Intensive. 
 
 ### Technical Requirements
+
 Your app must:
 
 - Render a game board in the browser
@@ -23,5 +24,25 @@ Your app must:
 
 ### TODO
 
- - AI
- 
+ - AI (~~simple: random~~, intermediate, random 50%, impossible 50%, impossible: minmax)
+ - ~~Restart button~~
+ - media queries
+ - grid size selector (i.e. more than 3 x 3 )
+ - move script tags to the bottome as does not run 50% of the time.
+ - Turn display is not toggling
+ - DRY 
+ - Remove console.logs
+
+ ### Log
+
+ Day 1: 
+ - Created game logic for 3 x 3 game in JS.
+ - Styled page and linked game logic to html using JQuery.
+
+ Day 2:
+
+- Created a reset button and reset functionality.
+- updated styling in side panel
+- created basic (random) AI player
+- read up on Minmax ai algorithm for the 'impossible' AI
+
