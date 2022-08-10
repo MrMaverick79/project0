@@ -1,4 +1,10 @@
-
+/*  Tic-Tac-Toe
+ *
+ * Author: Brendan Tuckerman
+ * 
+ * 
+ * 
+ */ 
 //create game
 const game = {
 
@@ -150,7 +156,7 @@ const mediumAI = ()=> {
 let boardClone = JSON.parse(JSON.stringify(game.gameBoard));//this takes the originalboard and makes a deep copy (clone). Thus, you won't impact the game itself.
 
 // let boardClone = ['O', 'O', 2, 3, 4, 5, 6, 7, 8] //for testing
-console.log(boardClone);
+
 let human = 'O';
 let ai ='X';
 
@@ -164,7 +170,7 @@ let recursionCounter = 0;
 const minmax =  ( board, player ) => {
         let currentPlayer =  player;
         
-        recursionCounter++
+        recursionCounter++ //this can be toggled on or off from the second last line of this function.
         
         //an array to keep all the objects
         let moves = [];
@@ -231,7 +237,7 @@ const minmax =  ( board, player ) => {
                 }//end inner if
                 
             }//end for
-        }
+        }//end if/else
     
     
      //switch this on to get a recursion counter
@@ -257,7 +263,7 @@ const impossibleAi = ( board ) => {
 
 const toggleReset= () => {
     
-    showTurn()
+    showTurn();
     $('#status').html("Turn")
     if(game.gameActive) {
         $('#reset').animate({
@@ -292,7 +298,7 @@ const determinePlayer = () =>{
     return currentPlayer;
 }
 
-const playerTurn = ( square ) => {
+const playerTurn = ( square ) => { //implements a player turn once a square is clicked
         game.gameActive = true;
         toggleReset(); //displays reset button
         if(!game.isPlayerXTurn){
@@ -307,10 +313,9 @@ const playerTurn = ( square ) => {
         } //end if
 }//end playerTurn
 
-const aiTurn = () => {
+const aiTurn = () => { //the computer turn, based on the AI level
     
     if(game.aiLevel === 2){
-        $('#turn').html('Thinking...')
         impossibleAi(game.gameBoard);
     }
     else if(game.aiLevel === 1){ //this should just toggle between the two
@@ -329,7 +334,10 @@ const resetGame = () => { //resets the board
     
     //replace the js game board with original indexes
     game.resetBoard(game.gameBoard);  
-    $('.gridItem').html('') //clear the UI gameboard
+    $('.gridItem').animate({
+        fontSize: 0
+    }, 500) 
+    $('.gridItem').empty()//clear the UI gameboard
     game.gameActive = false;
     game.isPlayerXTurn = false;
     //hide the reset button
@@ -367,58 +375,66 @@ $('#impossible').on('click', function(){
 });
 
 
-$('.gridItem').on('click', function(){
-    //hide options here???
-    playerTurn($(this));
-    if(game.checkVictory(game.gameBoard)){
-        game.gameActive = false;
-        game.isPlayerXTurn = false;
-        $('#status').html(`Player Wins:`)
-        game.playerWins++
-        $('#turn').html(game.playerWins)
-        showDifficulty();
-        return;
-    }
-
-    //check whether the player has drawn
-    if(game.checkDraw(game.gameBoard)){
-        $('#status').html("Draw.")
-        showDifficulty();
-        return;
-    }
-
-    game.toggleTurn();
-
+$('.gridItem').on('click', function(){ //player clicks, turn is fired, then opposition turn
     
-    aiTurn();
-
-    //see if AI has won              
-    if(game.checkVictory(game.gameBoard)){
-        game.gameActive= false;
-        game.isPlayerXTurn = false;
-        $('#status').html(`Computer Wins:`)
-        game.computerWins++
-        $('#turn').html(game.computerWins)
-        showDifficulty();
-        return;
-    }
-   
-    //see if AI has drawn
-    if(game.checkDraw(game.gameBoard)){
+   if($(this).html() === 'O' || $(this).html() ==='X'){ //prevents clicking on a taken square
+        //return;
+   }
+   else{
+    //hide options here???
+        playerTurn($(this));
+        if(game.checkVictory(game.gameBoard)){
+            game.gameActive = false;
             game.isPlayerXTurn = false;
-            $('#status').html("Draw.");
+            $('#status').html(`Player Wins:`)
+            game.playerWins++
+            $('#turn').html(game.playerWins)
             showDifficulty();
             return;
+        }
+
+        //check whether the player has drawn
+        if(game.checkDraw(game.gameBoard)){
+            $('#status').html("Draw.")
+            showDifficulty();
+            return;
+        }
+
+        game.toggleTurn();
+
+        
+        aiTurn();
+
+        //see if AI has won              
+        if(game.checkVictory(game.gameBoard)){
+            game.gameActive= false;
+            game.isPlayerXTurn = false;
+            $('#status').html(`Computer Wins:`)
+            game.computerWins++
+            $('#turn').html(game.computerWins)
+            showDifficulty();
+            return;
+        }
+    
+        //see if AI has drawn
+        if(game.checkDraw(game.gameBoard)){
+                game.isPlayerXTurn = false;
+                $('#status').html("Draw.");
+                showDifficulty();
+                return;
+        }
+        if(game.gameActive===true){
+            showTurn();
+        }
+        game.toggleTurn();
+        if(game.gameActive===true){
+            setTimeout(function(){
+                showTurn()
+            }, 1500)
+    
+        }
     }
-    if(game.gameActive===true){
-        showTurn();
-    }
-    game.toggleTurn();
-    if(game.gameActive===true){
-        setTimeout(function(){
-            showTurn()
-        }, 2000)
-    }
+  
 });
 
 $('#reset').on('click', function(){

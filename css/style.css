@@ -38,6 +38,28 @@ h1{
     opacity: 0;
 }
 
+#reset::after{
+    opacity: 1;
+    content: '';
+    display: block;
+    text-align: center;
+    width: 80%;
+    margin-left: 12%;
+    height: 0.1em;
+    background-color: antiquewhite;
+    transition: opacity 500ms, transform 500ms;
+    transform: scale(0);
+    transform-origin: center;
+
+}
+
+#reset:hover::after,
+#reset:focus::after{
+
+    /* transform: translate3d(0, 0.2em, 0); */
+    transform: scale(1);
+}
+
 #reset:hover {
     cursor: pointer;
     color: rgba(20, 247, 247, 0.8);
@@ -71,7 +93,7 @@ h1{
 }
 
 .gridItem{
-    background-color: salmon;
+    background-color: rgb(250, 128, 114);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -82,17 +104,16 @@ h1{
 }
 
 .gridItem:hover {
-    background-color: rgba(245, 245, 238, 0.8);
+    background-color: rgba(250, 128, 114, 0.7);
     cursor: pointer;
 }
 
 .sidePanel{
     position: absolute;
-    right: 0;
+    right: 5%;
     top: 25%;   
     text-align: center;
     width: 20%;
-    
 }
 
 .aiButtons {
@@ -104,13 +125,60 @@ h1{
     font-size: 0.8rem;
     margin: 10px;
     
+    
 }
+
+.underlined::after{
+    opacity: 1;
+    content: '';
+    display: block;
+    text-align: center;
+    width: 40%;
+    margin-left: 30%;
+    height: 0.1em;
+    background-color: antiquewhite;
+    transition: opacity 500ms, transform 500ms;
+    transform: scale(0);
+    transform-origin: center;
+
+}
+
+.underlined:hover::after,
+.underlined:focus::after{
+
+    /* transform: translate3d(0, 0.2em, 0); */
+    transform: scale(1);
+}
+
+
 
 .aiButtons p:hover{
     cursor: pointer;
     color: rgba(20, 247, 247, 0.8);
+    
 }
 
 #turn{
     font-size: 1.3em;
+}
+
+/*Media Queries: Small Screen */
+
+@media screen and (max-width: 500px){
+    .gameContainer{
+        min-width: 60vw;
+        max-height: 40vh;
+    }
+    .mainContainer{
+        width: 100%;
+        
+    }
+
+    .sidePanel{
+        display: inline;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+    }
 }

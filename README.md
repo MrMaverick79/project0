@@ -24,15 +24,15 @@ Your app must:
 
 ### TODO
 
- - AI (~~simple: random~~, ~intermediate, random 50%, impossible 50%~, ~impossible: minmax~)
+ - AI (~~simple: random~~, ~~intermediate, random 50%, impossible 50%~~, ~~impossible: minmax~~)
  - ~~Restart button~~
  - media queries
- - move script tags to the bottom as does not run 50% of the time.
- - ~Turn display is not toggling~
+ - ~~move script tags to the bottom as does not run 50% of the time.~~
+ - ~~Turn display is not toggling~~
  - DRY 
- - ~Remove console.logs~
- - Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible
- - Player wins is being replaced with showturn()
+ - ~~Remove console.logs~~
+ - ~~Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible
+ - ~~Player wins is being replaced with showturn()~~
 
  ### Log
 
@@ -54,4 +54,5 @@ Day 3:
 - Multiple refactors to make code succinct
 - Fixed display toggle
 - Created impossible AI using min max
-
+- created underline styles for menu items.
+- dealt with edge cases and bugs around clicking the same squares
