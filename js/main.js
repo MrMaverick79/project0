@@ -14,9 +14,9 @@ const game = {
         // row1: [null, null, null],
         // row2: [null, null, null],
         // row3: [null, null, null],
-        '0': [null, null, null],
-        '1': [null, null, null],
-        '2': [null, null ,null],
+        '0': ["X", "O", "X"],
+        '1': ["O", null, "O"],
+        '2': ["X", "X" ,null],
     },
 
     displayBoard : function() { //for testing
@@ -184,19 +184,63 @@ let huPlayer = 'O';
 let aiPlayer ='X';
 
 
+const emptySpaces = ( board ) => {
+    let emptySpaces = [];
+    for (keys in board) {
+        for (let i = 0; i < board[keys].length; i++) {
+            if(board[keys][i]===null) {
+                emptySpaces.push([keys, i]);
+            }
+            
+        }
+    }
+    return emptySpaces; //returns all of the possible locations to make a move
+}//end emptySpaces
 
 
-const minmax =  (board, player) => {
-        if (player = 'X' && this.checkVictory()){
-            return 10;
+const minmax =  ( board, player ) => {
+        let currentPlayer =  player;
+        
+        if (player = aiPlayer && game.checkVictory(board)){
+            return {score :10};
         }
-        else if(player = 'O' && this.checkVictory()){
-            return -10;
+        else if(player = huPlayer && game.checkVictory(board)){
+            return {score: -10};
         }
-        else if (game.checkDraw()){
-            return 0;
+        else if (game.checkDraw( board )){
+            return {score: 0};
         }
-};
+        
+        //an array to keep all the objects
+        let moves = [];
+        let availableSpots =  emptySpaces( board ); //all of the possible moves on the board.
+
+        //loop through the spots
+        for (let i = 0; i < availableSpots.length; i++) {
+            let element = availableSpots[i]; //elements are arrays (['#', [#]) of the locations playable
+            //element[0] = row index , element[1] = col index 
+            console.log('Element:', element);
+            
+            let move = {}; //   records an index of the moves
+            move.index = [element[0],element[1]];
+            console.log(`move:`, move);
+            console.log(`element0:`, element[0]);
+            console.log(`element1:`, element[1]);
+            //set the empty spot to the player
+            board[element[0]][element[1]] = currentPlayer;
+            console.log(board);
+            
+            
+                    
+            
+        }
+       
+        
+
+
+
+}; //end minmax
+
 
 
 
