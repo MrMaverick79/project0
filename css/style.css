@@ -168,6 +168,7 @@ h1{
     .gameContainer{
         min-width: 60vw;
         max-height: 40vh;
+        font-size: 18px;
     }
     .mainContainer{
         width: 100%;
