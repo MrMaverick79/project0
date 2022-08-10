@@ -4,7 +4,8 @@ const game = {
 
     gameActive: true, //this can be used to start / end the game
     turnCount: 0,
-    aiLevel: 0,
+    aiToggle: 0,
+    aiLevel: 1,
     isPlayerXTurn: false,
     playerWins: 0,
     computerWins: 0,
@@ -46,8 +47,6 @@ const game = {
         for (let i = 0; i < board.length; i+=3) {
             let currentSlice =  board.slice(i, i+3) //create slices for each row
             if (this.onlyOneType(currentSlice)){
-                console.log('row win');
-                
                 return true;
             };
             
@@ -57,8 +56,6 @@ const game = {
         for (let i = 0; i < board.length-6; i++) {
             let columnSlice = [board[i], board[i+3], board[i+6]]; //create 'slice' of columns
             if ( this.onlyOneType(columnSlice)){
-                console.log('column win');
-                
                 return true;
             };
             
@@ -70,8 +67,6 @@ const game = {
             diagonalSlice.push(board[i]);
         }
         if( this.onlyOneType(diagonalSlice)){
-            console.log('diagonal l r win');
-            
             return true;
         };
             
@@ -82,14 +77,12 @@ const game = {
              diagonalSliceOpp.push(board[4]);
              diagonalSliceOpp.push(board[6]);
         if (this.onlyOneType(diagonalSliceOpp)){
-            console.log('diagonal l r win');
-            
             return true;
         };
 
     },//end checkVictory
    
-    toggleTurn: function() { //returns whether it is currently the players turn or not.
+    toggleTurn: function() { //changes the player from isX from true / false
         if(this.isPlayerXTurn === true){
             this.isPlayerXTurn = false;
         } else{
@@ -106,17 +99,15 @@ const game = {
         }
         return true;     
            
-    },// end checkDraw
-
-    
+    },// end checkDraw 
 
 }; //end game
 
 //==========================AI===================================//
 
-//============
+//============Basic AI============================//
 
-const chooseRandomPosition = () => {
+const chooseRandomPosition = () => { //selects a random index to move to
     const randomIndex = Math.floor(Math.random() * 8);
     return randomIndex;
 }
@@ -130,12 +121,26 @@ const basicAI = () =>{
             $(`#${selection}`).html('X').delay(500).animate({
                 'fontSize': '4em'
             }, 1000)
-            
+
         }
         else{
             basicAI();
         }
 }//end basic AI;;
+
+
+//=====================mediumAI========================//
+
+const mediumAI = ()=> {
+    if(game.aiToggle === 0){
+        basicAI();
+        game.aiToggle = 1;
+    }
+    else{
+        impossibleAi(game.gameBoard)
+        game.aiToggle = 0;
+    }
+};
 
 
     //============impossible AI==================================//
@@ -155,29 +160,25 @@ const emptySpaces = ( board ) => { //returns the positions of the empty spaces
     return emptySpaces; //returns an aray  of the possible locations to make a move
 }//end emptySpaces
 
-
+let recursionCounter = 0;
 const minmax =  ( board, player ) => {
         let currentPlayer =  player;
-        console.log('Current player is', player);
+        
+        recursionCounter++
         
         //an array to keep all the objects
         let moves = [];
         let availableSpots =  emptySpaces( board ); //all of the possible moves on the board.
-        console.log('Length of available spots: ', availableSpots.length);
-        
-        
+
         //the players need to be opposite as the move has not yet been made
         //that is, it checks the state of the board after a move has just been made
         if (player === ai && game.checkVictory( board )){ //assigns 10 points for an ai victory
-            console.log('Ai victory found');
             return {score :10};
         }
         else if(player === human && game.checkVictory( board )){ //detracts 10 points for a human victory
-            console.log('Human victory found :(');
             return {score: -10};
         }
         else if (availableSpots.length===0){ //scores a draw 
-            console.log('Results in a draw');
             return {score: 0};
         }
 
@@ -185,30 +186,20 @@ const minmax =  ( board, player ) => {
         //loop through the spots
         for (let i = 0; i < availableSpots.length; i++) {
             let element = availableSpots[i]; //elements are indexes (as #s) relating to a position on the gameboard. I.e a number--NOT the actual board spot
-            console.log('element is', element);
-            
-            
             let move = {}; //   records an index of each move, with an index and a score(if possible)
             move.index = element; //store the index of the available spot
             //set the empty spot to the player
-            console.log('Checking current player ', currentPlayer);
             
             board[element] = currentPlayer;
 
             //check the current state of the board that has been passed in to see if any of the end game states have been met
-           
-
-            console.log('move:', move);
+    
             if (player === ai){
                 let result = minmax(board, human);
-                console.log('ai move', boardClone);
-                console.log('result', result);
                 move.score = result.score;
             }
             else {
                 let result = minmax(board, ai);
-                console.log('player move', boardClone);
-                console.log('player result', result);
                 move.score = result.score; //this returns undefined because it is not found?
             }
 
@@ -243,27 +234,24 @@ const minmax =  ( board, player ) => {
         }
     
     
-     //this returns a move as an object: {index: # score: #}
+     //switch this on to get a recursion counter
+    // console.log('Moves considered:', recursionCounter);
     
     return moves[bestMove]; //should return the index and score
 
 }; //end minmax
 
-const impossibleAi = (board) => {
-    const move = minmax(board, ai).index
+const impossibleAi = ( board ) => {
+    let move = minmax(board, ai)
+    move = move.index;
     game.placeMove(board, 'X', move);
     $(`#${move}`).html('X').delay(500).animate({
         'fontSize': '4em'
     }, 1000)
     
+    // showTurn();
 };
 
-
-
-
-// call the minimax function on each available spot (recursion)
-// evaluate returning values from function calls
-// and return the best value
 
 //==============UI===========//
 
@@ -283,16 +271,17 @@ const toggleReset= () => {
         }, 1500)
        
     }
-}
+}; //end toggleReset
    
 
 const showTurn = () => { //displays whose turn it is in the right hand margin
     const $turnIndicator = $('#turn')
-        $turnIndicator.html('Thinking...');
     if(game.isPlayerXTurn) {
         $turnIndicator.html('X');
+        return true;
     } else {
         $turnIndicator.html("O");
+        return true;
     }
 }//end showTurn
 
@@ -303,113 +292,139 @@ const determinePlayer = () =>{
     return currentPlayer;
 }
 
-const playGame = (square) => {
-
-        let currentPlayer = determinePlayer();
-        console.log('This turn is', currentPlayer);
-        
+const playerTurn = ( square ) => {
         game.gameActive = true;
         toggleReset(); //displays reset button
-
         if(!game.isPlayerXTurn){
-
-    
             if (game.placeMove(game.gameBoard, 'O', square.attr('id'))){
-                
                    square.html('O')
                     square.animate({
                         'fontSize': '4em'
                     }, 1000)
-                    game.toggleTurn()
-                
-
-                    console.log('The move is now' , currentPlayer);
-                    
-                    
-                // if (game.placeMove('X', coords[0], parseInt(coords[1]))) {
-                //     $(this).html('X')
-                //     $(this).animate({
-                //         'fontSize': '4em'
-                //     }, 1000)
-                //     game.togglePlayerTurn();
-                // }
-                }
             
-            showTurn();
-            
-            //check whether the player has won
-            if(game.checkVictory(game.gameBoard)){
-                    game.gameActive = false;
-                    game.isPlayerXTurn = false;
-                    $('#status').html(`${currentPlayer} Wins!`)
-                    return;
-            }
-           
-            //check whether the player has drawn
-            if(game.checkDraw(game.gameBoard)){
-                 $('#status').html("Draw.")
-                 return;
-            }
-         
-            currentPlayer ='X';
-            //computer turn
-            if(game.aiLevel === 2){
-                impossibleAi(game.gameBoard);
-            }
-            else if(game.aiLevel === 1){ //this should just toggle between the two
-                mediumAI();
-            }
-            else{
-                basicAI();
-            }
+            }//end inner if
+          
+        } //end if
+}//end playerTurn
 
-            //see if AI has won              
-            if(game.checkVictory(game.gameBoard)){
-                game.gameActive= false;
-                game.isPlayerXTurn = false;
-                $('#status').html(`${currentPlayer} Wins!`)
-                return;
-            }
-           
-            //see if AI has drawn
-            if(game.checkDraw(game.gameBoard)){
-                    game.isPlayerXTurn = false;
-                    $('#status').html("Draw.");
-                    return;
-            }
-            game.toggleTurn();
-            currentPlayer = "O"
-            showTurn();
+const aiTurn = () => {
+    
+    if(game.aiLevel === 2){
+        $('#turn').html('Thinking...')
+        impossibleAi(game.gameBoard);
+    }
+    else if(game.aiLevel === 1){ //this should just toggle between the two
+        mediumAI();
+    }
+    else{
+        basicAI();
+    }
+}; //end aiTurn
 
-        }; 
-
-}//end playGame
 
 
 
 
 const resetGame = () => { //resets the board 
     
-        //replace the js game board with original indexes
-    game.resetBoard(game.gameBoard);
-         //end inner for loop
+    //replace the js game board with original indexes
+    game.resetBoard(game.gameBoard);  
     $('.gridItem').html('') //clear the UI gameboard
     game.gameActive = false;
     game.isPlayerXTurn = false;
     //hide the reset button
     toggleReset();
    //end resetGame
-}
+};
 
+const hideDifficulty= () => {
+    $('.aiButtons').fadeOut(2000);
+};//end hideDifficulty
+
+const showDifficulty= () => {
+    $('.aiButtons').fadeIn(2000);
+};
 
 //event listeners
 
+//set buttons for AI
+$('#easy').on('click', function(){
+     console.log('Clicked');
+     game.aiLevel = 0;
+    hideDifficulty()
+});
+
+$('#medium').on('click', function(){
+    console.log('Clicked');
+    game.aiLevel = 1;
+    hideDifficulty()
+});
+
+$('#impossible').on('click', function(){
+    console.log('Clicked');
+    game.aiLevel = 2;
+   hideDifficulty()
+});
+
+
 $('.gridItem').on('click', function(){
-    playGame($(this));
-})
+    //hide options here???
+    playerTurn($(this));
+    if(game.checkVictory(game.gameBoard)){
+        game.gameActive = false;
+        game.isPlayerXTurn = false;
+        $('#status').html(`Player Wins:`)
+        game.playerWins++
+        $('#turn').html(game.playerWins)
+        showDifficulty();
+        return;
+    }
+
+    //check whether the player has drawn
+    if(game.checkDraw(game.gameBoard)){
+        $('#status').html("Draw.")
+        showDifficulty();
+        return;
+    }
+
+    game.toggleTurn();
+
+    
+    aiTurn();
+
+    //see if AI has won              
+    if(game.checkVictory(game.gameBoard)){
+        game.gameActive= false;
+        game.isPlayerXTurn = false;
+        $('#status').html(`Computer Wins:`)
+        game.computerWins++
+        $('#turn').html(game.computerWins)
+        showDifficulty();
+        return;
+    }
+   
+    //see if AI has drawn
+    if(game.checkDraw(game.gameBoard)){
+            game.isPlayerXTurn = false;
+            $('#status').html("Draw.");
+            showDifficulty();
+            return;
+    }
+    if(game.gameActive===true){
+        showTurn();
+    }
+    game.toggleTurn();
+    if(game.gameActive===true){
+        setTimeout(function(){
+            showTurn()
+        }, 2000)
+    }
+});
+
 $('#reset').on('click', function(){
     resetGame();
-})
+    game.aiToggle = 0; //to ensure the first move is random
+});
 
 
 

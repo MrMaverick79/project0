@@ -9,8 +9,8 @@ html {
 
 h1{
     color: rgba(255, 255, 255, 06);
+    margin-left: 2%;
 }
-
 
 
 .mainContainer{
@@ -40,6 +40,7 @@ h1{
 
 #reset:hover {
     cursor: pointer;
+    color: rgba(20, 247, 247, 0.8);
 }
 
 .shadowButtons {
@@ -81,7 +82,7 @@ h1{
 }
 
 .gridItem:hover {
-    background-color: beige;
+    background-color: rgba(245, 245, 238, 0.8);
     cursor: pointer;
 }
 
@@ -92,4 +93,24 @@ h1{
     text-align: center;
     width: 20%;
     
+}
+
+.aiButtons {
+    position: relative;
+
+}
+
+.aiButtons p{
+    font-size: 0.8rem;
+    margin: 10px;
+    
+}
+
+.aiButtons p:hover{
+    cursor: pointer;
+    color: rgba(20, 247, 247, 0.8);
+}
+
+#turn{
+    font-size: 1.3em;
 }

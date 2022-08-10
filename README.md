@@ -24,18 +24,20 @@ Your app must:
 
 ### TODO
 
- - AI (~~simple: random~~, intermediate, random 50%, impossible 50%, impossible: minmax)
+ - AI (~~simple: random~~, ~intermediate, random 50%, impossible 50%~, ~impossible: minmax~)
  - ~~Restart button~~
  - media queries
- - grid size selector (i.e. more than 3 x 3 )
- - move script tags to the bottome as does not run 50% of the time.
- - Turn display is not toggling
+ - move script tags to the bottom as does not run 50% of the time.
+ - ~Turn display is not toggling~
  - DRY 
- - Remove console.logs
+ - ~Remove console.logs~
+ - Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible
+ - Player wins is being replaced with showturn()
 
  ### Log
 
  Day 1: 
+
  - Created game logic for 3 x 3 game in JS.
  - Styled page and linked game logic to html using JQuery.
 
@@ -45,4 +47,11 @@ Your app must:
 - updated styling in side panel
 - created basic (random) AI player
 - read up on Minmax ai algorithm for the 'impossible' AI
+
+Day 3:
+
+- Refactored code to use only array to store data
+- Multiple refactors to make code succinct
+- Fixed display toggle
+- Created impossible AI using min max
 
