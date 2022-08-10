@@ -439,6 +439,7 @@ $('.gridItem').on('click', function(){ //player clicks, turn is fired, then oppo
 
 $('#reset').on('click', function(){
     resetGame();
+    showDifficulty();
     game.aiToggle = 0; //to ensure the first move is random
 });
 
