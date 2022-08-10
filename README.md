@@ -31,7 +31,7 @@ Your app must:
  - ~~Turn display is not toggling~~
  - DRY 
  - ~~Remove console.logs~~
- - ~~Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible
+ - ~~Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible~~
  - ~~Player wins is being replaced with showturn()~~
 
  ### Log
