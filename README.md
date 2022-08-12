@@ -1,13 +1,21 @@
 # Project0
 ## A tic-tac-toe game 
 
+![A game screen shot](https://github.com/MrMaverick79/MrMaverick79.github.io/blob/main/images/TTT-screenshot.png)
+
 ----
 
 Author: Brendan Tuckerman
 
-Link:
+Link: https://mrmaverick79.github.io/project0/
 
-Background / Spec: This is the first project as part of General Assembly's Software Engineering Intensive. 
+Background / Spec:  
+
+A tic-tac-toe game using HTML, CSS, JavaScript and Jquery.
+
+Implements a minimax algorithm for the 'impossible ai'.
+
+This is the first project as part of General Assembly's Software Engineering Intensive 2022. 
 
 ### Technical Requirements
 
@@ -22,14 +30,28 @@ Your app must:
 - Deploy your game online, where the rest of the world can access it
 - Use semantic markup for HTML and CSS (adhere to best practices)
 
+## Features
+
+AI:
+
+- Easy (AI randomly selects a square)
+- Medium (AI chooses random 50% of the time, impossible 50% of the time)
+- Impossible (AI determines all possible future moves and gives them a score of either +10 or -10, dependent on the outcome. The then determine the move with th highest score.)
+
+UI:
+
+- Tracks Player wins and Computer wins
+- Lightweight interface
+
+
 ### TODO
 
  - AI (~~simple: random~~, ~~intermediate, random 50%, impossible 50%~~, ~~impossible: minmax~~)
  - ~~Restart button~~
- - media queries
+ - ~~media queries~~
  - ~~move script tags to the bottom as does not run 50% of the time.~~
  - ~~Turn display is not toggling~~
- - DRY 
+ - DRY code
  - ~~Remove console.logs~~
  - ~~Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible~~
  - ~~Player wins is being replaced with showturn()~~
@@ -56,3 +78,13 @@ Day 3:
 - Created impossible AI using min max
 - created underline styles for menu items.
 - dealt with edge cases and bugs around clicking the same squares
+
+Day 4:
+
+- Added more detailed explanation of code in the comments.
+- Updated the READ.ME and documentation.
+
+## Known bugs / Future fixes / Wish list
+
+- Media queries for small screens misaligned
+- Draws not yet showing

@@ -2,10 +2,12 @@
  *
  * Author: Brendan Tuckerman
  * 
+ * Live link: https://mrmaverick79.github.io/project0/
  * 
  * 
  */ 
-//create game
+
+//game is an object that stores the game details including the game board, wins and loses, and support functions that check for wins and loses.
 const game = {
 
     gameActive: true, //this can be used to start / end the game
@@ -17,15 +19,15 @@ const game = {
     computerWins: 0,
     gameBoard: [0,1,2,3,4,5,6,7,8],  //state of the board in array with insex numbers
     
-    displayBoard : function() { //for testing
+    displayBoard : function() { //for testing. Console logs the game.gameBoard array
         console.log(this.gameBoard);
     }, 
 
-    getValue: function(index) {
+    getValue: function( index ) { //used as a helper function to find the value of a position on the array.
         return this.gameBoard[index];
-    },
+    }, //end getValue
 
-    resetBoard: function(board){
+    resetBoard: function( board ){ //resets the board array above to #s.
         for (let i = 0; i < board.length; i++) {
             board[i] = i;  
         }
@@ -42,10 +44,10 @@ const game = {
        
     }, //end placeMove
 
-    onlyOneType(array){
+    onlyOneType(array){ //this function takes an array and turns it into a Set. A set does not allow duplicated of the same value. Therefore if the length (size) is === 1; there is only one type in  the array. This is a win in tic-tac-toe.
         let s = new Set(array);
         return s.size ===1
-    },//
+    },//end onlyOneType
 
     checkVictory: function( board ) { //checks all possible victory conditions 
          //This set is reused to see if the contents of the different interations are the same. A set with a length === 1 means the player has won.
@@ -77,7 +79,7 @@ const game = {
         };
             
         //condition 4: diagonals right to left
-        //TODO this is still hardcoded
+        //TODO: this is hardcoded
         let diagonalSliceOpp = [];
             diagonalSliceOpp.push(board[2]);
              diagonalSliceOpp.push(board[4]);
@@ -113,15 +115,14 @@ const game = {
 
 //============Basic AI============================//
 
-const chooseRandomPosition = () => { //selects a random index to move to
+const chooseRandomPosition = () => { //selects a random index to move to (out of the 9 spaces available on the board)
     const randomIndex = Math.floor(Math.random() * 8);
     return randomIndex;
-}
+}; //end chooseRandomPosition
 
 const basicAI = () =>{
     //looks over board and chooses a random free square
     let selection = chooseRandomPosition();
-    console.log('basicAI', selection);
         if (game.placeMove(game.gameBoard, 'X', selection)){
             //place o on UI <=--this is the only place where this can gor weon
             $(`#${selection}`).html('X').delay(500).animate({
@@ -130,7 +131,7 @@ const basicAI = () =>{
 
         }
         else{
-            basicAI();
+            basicAI(); //runs basicAI again until it chooses a position that is not taken.
         }
 }//end basic AI;;
 
@@ -149,7 +150,7 @@ const mediumAI = ()=> {
 };
 
 
-    //============impossible AI==================================//
+//=====================impossible AI==================================//
 
 
 
@@ -157,16 +158,17 @@ let boardClone = JSON.parse(JSON.stringify(game.gameBoard));//this takes the ori
 
 // let boardClone = ['O', 'O', 2, 3, 4, 5, 6, 7, 8] //for testing
 
-let human = 'O';
-let ai ='X';
+let human = 'O'; //these are fed into the minmax function
+let ai ='X'; 
 
 
 const emptySpaces = ( board ) => { //returns the positions of the empty spaces
     let emptySpaces = board.filter(x => typeof x === 'number') //returns any spaces that are still a number
     return emptySpaces; //returns an aray  of the possible locations to make a move
-}//end emptySpaces
 
-let recursionCounter = 0;
+};//end emptySpaces
+
+let recursionCounter = 0; //this can be used to count the number of recursions. You'll need to turn this one in the last line of minmax.
 const minmax =  ( board, player ) => {
         let currentPlayer =  player;
         
@@ -189,7 +191,7 @@ const minmax =  ( board, player ) => {
         }
 
 
-        //loop through the spots
+        //loop through all the available places where a move could be made
         for (let i = 0; i < availableSpots.length; i++) {
             let element = availableSpots[i]; //elements are indexes (as #s) relating to a position on the gameboard. I.e a number--NOT the actual board spot
             let move = {}; //   records an index of each move, with an index and a score(if possible)
@@ -209,9 +211,9 @@ const minmax =  ( board, player ) => {
                 move.score = result.score; //this returns undefined because it is not found?
             }
 
-            // //reset the board by replacing the move with the original element
+            //reset the board by replacing the move with the original element
             board[element] = move.index;
-            moves.push(move);
+            moves.push(move); //add the move to the move list
             
             
         }//end for loop
@@ -219,7 +221,7 @@ const minmax =  ( board, player ) => {
         //loop through moves and determine which is the min or max (depending on player)
         let bestMove;
         if(player === human){
-            let bestScore = -100000 //does this work here? Could I just use a large number? 
+            let bestScore = -100000 //this needs to be lower than any possible loss moves.
             for (let i = 0; i < moves.length; i++) {
                 if (moves[i].score > bestScore){
                     bestScore = moves[i].score;
@@ -229,7 +231,7 @@ const minmax =  ( board, player ) => {
             }//end for
         }//end if
         else{//for the player
-            let bestScore = 100000 //does this work here? Could I just use a large number? 
+            let bestScore = 100000 //this needs to be a large number--larger than the possible win.
             for (let i = 0; i < moves.length; i++) {
                 if (moves[i].score < bestScore){
                     bestScore = moves[i].score;
@@ -247,7 +249,7 @@ const minmax =  ( board, player ) => {
 
 }; //end minmax
 
-const impossibleAi = ( board ) => {
+const impossibleAi = ( board ) => { //runs the 'Impossible' level ai.
     let move = minmax(board, ai)
     move = move.index;
     game.placeMove(board, 'X', move);
@@ -255,13 +257,13 @@ const impossibleAi = ( board ) => {
         'fontSize': '4em'
     }, 1000)
     
-    // showTurn();
-};
+    
+}; //end impossibleAi
 
 
 //==============UI===========//
 
-const toggleReset= () => {
+const toggleReset= () => { //fades the 'reset' button below in and out
     
     showTurn();
     $('#status').html("Turn")
@@ -280,7 +282,7 @@ const toggleReset= () => {
 }; //end toggleReset
    
 
-const showTurn = () => { //displays whose turn it is in the right hand margin
+const showTurn = () => { //displays whose turn it is in the right hand margin;
     const $turnIndicator = $('#turn')
     if(game.isPlayerXTurn) {
         $turnIndicator.html('X');
@@ -291,12 +293,12 @@ const showTurn = () => { //displays whose turn it is in the right hand margin
     }
 }//end showTurn
 
-showTurn();//initialise
+showTurn();//initialise showTurn()
 
 const determinePlayer = () =>{
     let currentPlayer = game.isPlayerXTurn===true ? 'X' : 'O';
     return currentPlayer;
-}
+}; //end determine player
 
 const playerTurn = ( square ) => { //implements a player turn once a square is clicked
         game.gameActive = true;
@@ -328,8 +330,6 @@ const aiTurn = () => { //the computer turn, based on the AI level
 
 
 
-
-
 const resetGame = () => { //resets the board 
     
     //replace the js game board with original indexes
@@ -342,18 +342,18 @@ const resetGame = () => { //resets the board
     game.isPlayerXTurn = false;
     //hide the reset button
     toggleReset();
-   //end resetGame
-};
+   
+}; //end resetGame()
 
-const hideDifficulty= () => {
+const hideDifficulty= () => { //fades out the dificulty section
     $('.aiButtons').fadeOut(2000);
 };//end hideDifficulty
 
-const showDifficulty= () => {
+const showDifficulty= () => { //fades in the difficullty section
     $('.aiButtons').fadeIn(2000);
-};
+};//end show difficulty
 
-//event listeners
+//============event listeners/ play game=======================//
 
 //set buttons for AI
 $('#easy').on('click', function(){
