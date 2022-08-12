@@ -17,7 +17,7 @@ const game = {
     isPlayerXTurn: false,
     playerWins: 0,
     computerWins: 0,
-    gameBoard: [0,1,2,3,4,5,6,7,8],  //state of the board in array with insex numbers
+    gameBoard: [0,1,2,3,4,5,6,7,8],  //state of the board in array with index numbers
     
     displayBoard : function() { //for testing. Console logs the game.gameBoard array
         console.log(this.gameBoard);
@@ -44,7 +44,7 @@ const game = {
        
     }, //end placeMove
 
-    onlyOneType(array){ //this function takes an array and turns it into a Set. A set does not allow duplicated of the same value. Therefore if the length (size) is === 1; there is only one type in  the array. This is a win in tic-tac-toe.
+    onlyOneType( array ){ //this function takes an array and turns it into a Set. A set does not allow duplicated of the same value. Therefore if the length (size) is === 1; there is only one type in  the array. This is a win in tic-tac-toe.
         let s = new Set(array);
         return s.size ===1
     },//end onlyOneType
@@ -124,7 +124,7 @@ const basicAI = () =>{
     //looks over board and chooses a random free square
     let selection = chooseRandomPosition();
         if (game.placeMove(game.gameBoard, 'X', selection)){
-            //place o on UI <=--this is the only place where this can gor weon
+            //place on on UI if possible
             $(`#${selection}`).html('X').delay(500).animate({
                 'fontSize': '4em'
             }, 1000)
@@ -147,7 +147,7 @@ const mediumAI = ()=> {
         impossibleAi(game.gameBoard)
         game.aiToggle = 0;
     }
-};
+};//end mediumAI
 
 
 //=====================impossible AI==================================//
@@ -168,7 +168,8 @@ const emptySpaces = ( board ) => { //returns the positions of the empty spaces
 
 };//end emptySpaces
 
-let recursionCounter = 0; //this can be used to count the number of recursions. You'll need to turn this one in the last line of minmax.
+let recursionCounter = 0; //this can be used to count the number of recursions. You'll need to turn this on in the last line of minmax.
+
 const minmax =  ( board, player ) => {
         let currentPlayer =  player;
         
@@ -243,7 +244,7 @@ const minmax =  ( board, player ) => {
     
     
      //switch this on to get a recursion counter
-    // console.log('Moves considered:', recursionCounter);
+     console.log('Moves considered:', recursionCounter);
     
     return moves[bestMove]; //should return the index and score
 
@@ -267,7 +268,7 @@ const toggleReset= () => { //fades the 'reset' button below in and out
     
     showTurn();
     $('#status').html("Turn")
-    if(game.gameActive) {
+    if(game.gameActive === true) {
         $('#reset').animate({
             opacity: 0.9,
         }, 1500)
@@ -301,9 +302,9 @@ const determinePlayer = () =>{
 }; //end determine player
 
 const playerTurn = ( square ) => { //implements a player turn once a square is clicked
-        game.gameActive = true;
+        
         toggleReset(); //displays reset button
-        if(!game.isPlayerXTurn){
+        if(!game.isPlayerXTurn && game.gameActive){
             if (game.placeMove(game.gameBoard, 'O', square.attr('id'))){
                    square.html('O')
                     square.animate({
@@ -357,20 +358,20 @@ const showDifficulty= () => { //fades in the difficullty section
 
 //set buttons for AI
 $('#easy').on('click', function(){
-     console.log('Clicked');
      game.aiLevel = 0;
+     game.gameActive = true;
     hideDifficulty()
 });
 
 $('#medium').on('click', function(){
-    console.log('Clicked');
     game.aiLevel = 1;
+    game.gameActive = true;
     hideDifficulty()
 });
 
 $('#impossible').on('click', function(){
-    console.log('Clicked');
     game.aiLevel = 2;
+    game.gameActive = true;
    hideDifficulty()
 });
 
@@ -378,16 +379,19 @@ $('#impossible').on('click', function(){
 $('.gridItem').on('click', function(){ //player clicks, turn is fired, then opposition turn
     
    if($(this).html() === 'O' || $(this).html() ==='X'){ //prevents clicking on a taken square
-        //return;
+        return;
    }
    else{
     //hide options here???
         playerTurn($(this));
         if(game.checkVictory(game.gameBoard)){
+            if(game.gameActive){
+                game.playerWins++
+            }
             game.gameActive = false;
             game.isPlayerXTurn = false;
             $('#status').html(`Player Wins:`)
-            game.playerWins++
+            
             $('#turn').html(game.playerWins)
             showDifficulty();
             return;
@@ -440,7 +444,8 @@ $('.gridItem').on('click', function(){ //player clicks, turn is fired, then oppo
 $('#reset').on('click', function(){
     resetGame();
     showDifficulty();
-    game.aiToggle = 0; //to ensure the first move is random
+    game.gameActive = true;
+    game.aiToggle = 0; //to ensure the first move is randomAI()
 });
 
 

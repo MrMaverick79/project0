@@ -33,13 +33,11 @@ Your app must:
 ## Features
 
 AI:
-
 - Easy (AI randomly selects a square)
 - Medium (AI chooses random 50% of the time, impossible 50% of the time)
 - Impossible (AI determines all possible future moves and gives them a score of either +10 or -10, dependent on the outcome. The then determine the move with th highest score.)
 
 UI:
-
 - Tracks Player wins and Computer wins
 - Lightweight interface
 
@@ -88,3 +86,4 @@ Day 4:
 
 - Media queries for small screens misaligned
 - Draws not yet showing
+- Clicks still available post game
