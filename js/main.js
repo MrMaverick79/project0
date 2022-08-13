@@ -244,7 +244,7 @@ const minmax =  ( board, player ) => {
     
     
      //switch this on to get a recursion counter
-     console.log('Moves considered:', recursionCounter);
+    //  console.log('Moves considered:', recursionCounter);
     
     return moves[bestMove]; //should return the index and score
 
@@ -274,7 +274,7 @@ const toggleReset= () => { //fades the 'reset' button below in and out
         }, 1500)
        
     }
-    else {
+    else {//this is causing reset to disappear when the game is over AND there are still empty squares
         $('#reset').animate({
             opacity: 0, 
         }, 1500)
@@ -303,17 +303,17 @@ const determinePlayer = () =>{
 
 const playerTurn = ( square ) => { //implements a player turn once a square is clicked
         
-        toggleReset(); //displays reset button
-        if(!game.isPlayerXTurn && game.gameActive){
-            if (game.placeMove(game.gameBoard, 'O', square.attr('id'))){
-                   square.html('O')
-                    square.animate({
-                        'fontSize': '4em'
-                    }, 1000)
-            
-            }//end inner if
-          
-        } //end if
+    toggleReset(); //displays reset button
+    if(!game.isPlayerXTurn && game.gameActive){
+        if (game.placeMove(game.gameBoard, 'O', square.attr('id'))){
+                square.html('O')
+                square.animate({
+                    'fontSize': '4em'
+                }, 1000)
+        
+        }//end inner if
+        
+    } //end if
 }//end playerTurn
 
 const aiTurn = () => { //the computer turn, based on the AI level
@@ -376,74 +376,86 @@ $('#impossible').on('click', function(){
 });
 
 
-$('.gridItem').on('click', function(){ //player clicks, turn is fired, then opposition turn
-    
-   if($(this).html() === 'O' || $(this).html() ==='X'){ //prevents clicking on a taken square
-        return;
-   }
-   else{
-    //hide options here???
-        playerTurn($(this));
-        if(game.checkVictory(game.gameBoard)){
-            if(game.gameActive){
-                game.playerWins++
-            }
-            game.gameActive = false;
-            game.isPlayerXTurn = false;
-            $('#status').html(`Player Wins:`)
-            
-            $('#turn').html(game.playerWins)
-            showDifficulty();
-            return;
-        }
 
-        //check whether the player has drawn
-        if(game.checkDraw(game.gameBoard)){
-            $('#status').html("Draw.")
-            showDifficulty();
-            return;
-        }
 
-        game.toggleTurn();
+const executeTurn = ( square ) => {
+    if(game.gameActive){
 
-        
-        aiTurn();
 
-        //see if AI has won              
-        if(game.checkVictory(game.gameBoard)){
-            game.gameActive= false;
-            game.isPlayerXTurn = false;
-            $('#status').html(`Computer Wins:`)
-            game.computerWins++
-            $('#turn').html(game.computerWins)
-            showDifficulty();
-            return;
-        }
-    
-        //see if AI has drawn
-        if(game.checkDraw(game.gameBoard)){
-                game.isPlayerXTurn = false;
-                $('#status').html("Draw.");
-                showDifficulty();
+        if($(square).html() === 'O' || $(square).html() ==='X'){ //prevents clicking on a taken square
                 return;
         }
-        if(game.gameActive===true){
-            showTurn();
-        }
-        game.toggleTurn();
-        if(game.gameActive===true){
-            setTimeout(function(){
-                showTurn()
-            }, 1500)
-    
-        }
+        else{
+            //hide options here???
+                playerTurn(square);
+                if(game.checkVictory(game.gameBoard)){
+                    if(game.gameActive){
+                        game.playerWins++
+                    }
+                    game.gameActive = false;
+                    
+                    game.isPlayerXTurn = false;
+                    $('#status').html(`Player Wins:`)
+                
+                    $('#turn').html(game.playerWins)
+                    showDifficulty();
+                    return;
+                }
+
+                //check whether the player has drawn
+                if(game.checkDraw(game.gameBoard)){
+                    $('#status').html("Draw.")
+                    showDifficulty();
+                    return;
+                }
+
+                game.toggleTurn();
+
+                
+                aiTurn();
+
+                //see if AI has won              
+                if(game.checkVictory(game.gameBoard)){
+                    game.gameActive= false;
+                    game.isPlayerXTurn = false;
+                    $('#status').html(`Computer Wins:`)
+                    game.computerWins++
+                    $('#turn').html(game.computerWins)
+                    showDifficulty();
+                    return;
+                }
+            
+                //see if AI has drawn
+                if(game.checkDraw(game.gameBoard)){
+                        game.isPlayerXTurn = false;
+                        $('#status').html("Draw.");
+                        showDifficulty();
+                        return;
+                }
+                if(game.gameActive===true){
+                    showTurn();
+                }
+                game.toggleTurn();
+                if(game.gameActive===true){
+                    setTimeout(function(){
+                        showTurn()
+                    }, 1500)
+            
+                }
+            }
     }
-  
-});
+};//end execute turn
+
+$('.gridItem').on('click',function(){
+    executeTurn($(this))
+
+}) //player clicks, turn is fired, then opposition turn
 
 $('#reset').on('click', function(){
+    
     resetGame();
     showDifficulty();
+    $('.gridItem').on('click');
     game.gameActive = true;
     game.aiToggle = 0; //to ensure the first move is randomAI()
 });
