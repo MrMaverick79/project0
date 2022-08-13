@@ -1,27 +1,22 @@
 # Project0
 ## A tic-tac-toe game 
+:x: :o: :x:
 
 ![A game screen shot](https://github.com/MrMaverick79/MrMaverick79.github.io/blob/main/images/TTT-screenshot.png)
 
 ----
 
-Author: Brendan Tuckerman
+**Author:** Brendan Tuckerman
 
-Link: https://mrmaverick79.github.io/project0/
+**Link:** https://mrmaverick79.github.io/project0/
 
-Background / Spec:  
+**Background / Spec:** 
 
-A tic-tac-toe game using HTML, CSS, JavaScript and Jquery.
+A tic-tac-toe game using ** HTML, CSS, JavaScript and Jquery **.
 
-<<<<<<< HEAD
 Implements a minimax algorithm for the 'impossible ai'.
 
 This is the first project as part of General Assembly's Software Engineering Intensive 2022. 
-=======
-Implements a minimax algorithm for the 'impossible ai'
-
-This is the first project as part of General Assembly's Software Engineering Intensive. 
->>>>>>> 8036f241052632e1e830b30e755945ef5da90345
 
 ### Technical Requirements
 
@@ -38,14 +33,28 @@ Your app must:
 
 ## Features
 
-AI:
+
+**UI:**
+- Tracks Player wins and Computer wins
+- Lightweight interface
+- Mobile media queries :iphone:
+
+**AI:**
 - Easy (AI randomly selects a square)
 - Medium (AI chooses random 50% of the time, impossible 50% of the time)
 - Impossible (AI determines all possible future moves and gives them a score of either +10 or -10, dependent on the outcome. The then determine the move with th highest score.)
 
-UI:
-- Tracks Player wins and Computer wins
-- Lightweight interface
+
+
+---
+
+### Impossible AI using the minimax algorithm
+
+The AI in this game is impossible to beat beacuse it uses the [minimax](https://en.wikipedia.org/wiki/Minimax) decision making rules. 
+
+
+
+
 
 
 ### TODO
@@ -59,24 +68,25 @@ UI:
  - ~~Remove console.logs~~
  - ~~Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible~~
  - ~~Player wins is being replaced with showturn()~~
- - Choosing a game difficulty needs to reset the board
+ - ~~ Choosing a game difficulty needs to reset the board ~~
+ - NB: See below for future fixes/ current bugs.
  
 
  ### Log
 
- Day 1: 
+ **Day 1:** 
 
  - Created game logic for 3 x 3 game in JS.
  - Styled page and linked game logic to html using JQuery.
 
- Day 2:
+ **Day 2:**
 
 - Created a reset button and reset functionality.
 - updated styling in side panel
 - created basic (random) AI player
 - read up on Minmax ai algorithm for the 'impossible' AI
 
-Day 3:
+**Day 3:**
 
 - Refactored code to use only array to store data
 - Multiple refactors to make code succinct
@@ -85,7 +95,7 @@ Day 3:
 - created underline styles for menu items.
 - dealt with edge cases and bugs around clicking the same squares
 
-Day 4:
+**Day 4:**
 
 - Added more detailed explanation of code in the comments.
 - Updated the READ.ME and documentation.
@@ -93,13 +103,16 @@ Day 4:
 ## Known bugs / Future fixes / Wish list
 
 
-** Bugs **
+**Bugs**
 - Media queries for small screens misaligned
-- Clicks still available post game
+- ~~ Clicks still available post game ~~
+- ~~ Display of reset misaligned with turns ~~
 
-** Future Fixes **
+**Future Fixes**
 - Game log on right hand side showing moves
+- Allow choice of token
+- strikethru effec on winning line
 - Update README for formatting
 - Update README to explain the impossible AI
 - Human / AI toggle
-- Remove hardcoded win states
+- Remove hardcoded win states to allow for larger boards or other games.
