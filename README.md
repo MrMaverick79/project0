@@ -85,7 +85,6 @@ Day 3:
 - created underline styles for menu items.
 - dealt with edge cases and bugs around clicking the same squares
 
-<<<<<<< HEAD
 Day 4:
 
 - Added more detailed explanation of code in the comments.
@@ -104,9 +103,3 @@ Day 4:
 - Update README to explain the impossible AI
 - Human / AI toggle
 - Remove hardcoded win states
-=======
-## Known bugs / Future fixes / Wish list
-
-- Media queries for small screens misaligned
-- Draws not yet showing
->>>>>>> 8036f241052632e1e830b30e755945ef5da90345
