@@ -53,6 +53,8 @@ UI:
  - ~~Remove console.logs~~
  - ~~Add 'menu' which shows win / loss / draw + allows you to select Easy / Medium / Impossible~~
  - ~~Player wins is being replaced with showturn()~~
+ - Choosing a game difficulty needs to reset the board
+ 
 
  ### Log
 
@@ -84,6 +86,14 @@ Day 4:
 
 ## Known bugs / Future fixes / Wish list
 
+
+** Bugs **
 - Media queries for small screens misaligned
-- Draws not yet showing
 - Clicks still available post game
+
+** Future Fixes **
+- Game log on right hand side showing moves
+- Update README for formatting
+- Update README to explain the impossible AI
+- Human / AI toggle
+- Remove hardcoded win states
