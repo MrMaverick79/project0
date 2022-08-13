@@ -209,7 +209,7 @@ const minmax =  ( board, player ) => {
             }
             else {
                 let result = minmax(board, ai);
-                move.score = result.score; //this returns undefined because it is not found?
+                move.score = result.score; 
             }
 
             //reset the board by replacing the move with the original element
